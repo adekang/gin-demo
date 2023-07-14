@@ -12,6 +12,13 @@ import (
 	"gorm.io/gorm"
 )
 
+func Info(ctx *gin.Context) {
+	user, _ := ctx.Get("user")
+
+	ctx.JSON(http.StatusOK, gin.H{"code": 200, "data": gin.H{"user": user}})
+}
+
+// 登录
 func Login(c *gin.Context) {
 	DB := common.GetDB()
 	// 获取参数
@@ -53,7 +60,16 @@ func Login(c *gin.Context) {
 	}
 
 	// 发放token
-	token := "11111111"
+	token, err := common.ReleaseToken(user)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": 500,
+			"msg":  "系统异常",
+		})
+		log.Printf("token generate error: %v", err)
+		return
+	}
 
 	// 返回结果
 	c.JSON(http.StatusOK, gin.H{
