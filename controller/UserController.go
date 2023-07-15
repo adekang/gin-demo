@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github/adekang/gin-demo/common"
 	"github/adekang/gin-demo/dto"
 	"github/adekang/gin-demo/model"
@@ -20,13 +21,23 @@ func Info(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"code": 200, "data": gin.H{"user": dto.ToUserDto(user.(model.User))}})
 }
 
-// 登录
+// Login 登录
 func Login(c *gin.Context) {
 	DB := common.GetDB()
 	// 获取参数
-	password := c.PostForm("password")
-	telephone := c.PostForm("telephone")
+	//password := c.PostForm("password")
+	//telephone := c.PostForm("telephone")
 
+	var requestUser = model.User{}
+	err := c.Bind(&requestUser)
+	if err != nil {
+		return
+	}
+	//获取参数
+	telephone := requestUser.Telephone
+	password := requestUser.Password
+
+	fmt.Println(telephone)
 	// 数据验证
 	if len(telephone) != 11 {
 		response.Response(c, http.StatusUnprocessableEntity, 422, nil, "手机号码不正确,必须为11位")
@@ -70,9 +81,15 @@ func Register(c *gin.Context) {
 	DB := common.GetDB()
 
 	// 获取参数
-	name := c.PostForm("name")
-	password := c.PostForm("password")
-	telephone := c.PostForm("telephone")
+	var requestUser = model.User{}
+	err := c.Bind(&requestUser)
+	if err != nil {
+		return
+	}
+	//获取参数
+	name := requestUser.Name
+	telephone := requestUser.Telephone
+	password := requestUser.Password
 
 	// 数据验证
 	c.JSON(http.StatusOK, gin.H{
