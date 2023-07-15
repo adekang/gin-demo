@@ -28,6 +28,11 @@ func Login(c *gin.Context) {
 	//password := c.PostForm("password")
 	//telephone := c.PostForm("telephone")
 
+	//使用map获取参数
+	//var requestMap = make(map[string]string)
+	//json.NewDecoder(c.Request.Body).Decode(&requestMap)
+
+	// 使用结构体获取参数
 	var requestUser = model.User{}
 	err := c.Bind(&requestUser)
 	if err != nil {
@@ -86,17 +91,11 @@ func Register(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	//获取参数
 	name := requestUser.Name
 	telephone := requestUser.Telephone
 	password := requestUser.Password
 
 	// 数据验证
-	c.JSON(http.StatusOK, gin.H{
-		"username": name,
-		"password": password,
-	})
-
 	if len(telephone) != 11 {
 		response.Response(c, http.StatusUnprocessableEntity, 422, nil, "手机号码不正确,必须为11位")
 
@@ -116,6 +115,7 @@ func Register(c *gin.Context) {
 	// 判断手机号是否存在
 	if isTelExist(DB, telephone) {
 		response.Response(c, http.StatusUnprocessableEntity, 422, nil, "用户存在,s不允许注册")
+		return
 	}
 
 	// 密码加密
@@ -135,8 +135,17 @@ func Register(c *gin.Context) {
 
 	DB.Create(&newUser)
 
+	// 发放token
+	token, err := common.ReleaseToken(newUser)
+
+	if err != nil {
+		response.Response(c, http.StatusUnprocessableEntity, 500, nil, "系统异常")
+
+		log.Printf("token generate error: %v", err)
+		return
+	}
 	// 返回结果
-	response.Success(c, nil, "注册成功")
+	response.Success(c, gin.H{"token": token}, "注册成功")
 }
 
 func isTelExist(db *gorm.DB, tel string) bool {
