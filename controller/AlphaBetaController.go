@@ -52,18 +52,13 @@ func UpdateAlphaBeta(c *gin.Context) {
 	id := requestAlphaBeta.ID
 
 	updateVar := &model.AlphaBeta{
-		ID: id,
+		ID:    id,
+		Alpha: requestAlphaBeta.Alpha,
+		Beta:  requestAlphaBeta.Beta,
+		Apply: requestAlphaBeta.Apply,
 	}
-	if err := db.First(updateVar).Error; err != nil {
-		// 处理记录不存在或数据库查询错误
 
-		response.Fail(c, gin.H{}, "数据库查询错误")
-	}
-	updateVar.Alpha = requestAlphaBeta.Alpha
-	updateVar.Beta = requestAlphaBeta.Beta
-	updateVar.Apply = requestAlphaBeta.Apply
-
-	if err := db.Save(updateVar).Error; err != nil {
+	if err := db.Model(&requestAlphaBeta).Updates(&updateVar).Error; err != nil {
 		// 处理保存失败错误
 		response.Fail(c, gin.H{}, "更新失败")
 	}
