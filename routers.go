@@ -13,5 +13,11 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 	r.POST("/api/auth/login", controller.Login)
 	r.POST("/api/auth/info", middleware.AuthMiddleware(), controller.Info)
 
+	alphaBeta := r.Group("/AlphaBeta")
+	{
+		alphaBeta.GET("/findAll", controller.FindAllAlphaBeta)
+		alphaBeta.POST("/update", controller.UpdateAlphaBeta)
+	}
+
 	return r
 }

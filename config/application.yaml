@@ -1,9 +1,9 @@
 server:
-  port:8080
+  port: 8080
 datasource:
   host: "localhost"
   port: "3306"
-  database: "gin_demo"
+  database: "formula_go"
   username: "root"
   password: "123456"
   charset: "utf8mb4"
