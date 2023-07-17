@@ -9,3 +9,7 @@ type AlphaBeta struct {
 	Beta  float32 `gorm:"size:24"`
 	Apply string  `gorm:"type:varchar(20);not null"`
 }
+
+func (v AlphaBeta) TableName() string {
+	return "alpha_beta"
+}

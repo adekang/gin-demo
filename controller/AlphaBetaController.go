@@ -61,6 +61,8 @@ func UpdateAlphaBeta(c *gin.Context) {
 	if err := db.Model(&requestAlphaBeta).Updates(&updateVar).Error; err != nil {
 		// 处理保存失败错误
 		response.Fail(c, gin.H{}, "更新失败")
+		return
+
 	}
 
 	response.Success(c, gin.H{}, "更新成功")

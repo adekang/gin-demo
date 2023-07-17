@@ -8,3 +8,7 @@ type User struct {
 	Telephone string `gorm:"type:varchar(11);not null;unique"`
 	Password  string `gorm:"size:255;not null"`
 }
+
+func (v User) TableName() string {
+	return "user"
+}
