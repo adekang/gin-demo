@@ -19,7 +19,7 @@ func FindAllTargetStatic(c *gin.Context) {
 	result := db.Find(&targetStatic)
 
 	if result.Error == nil {
-		response.Success(c, gin.H{"result": dto.ToTargetStaticDto(targetStatic)}, "查询成功")
+		response.Success(c, dto.ToTargetStaticDto(targetStatic), "查询成功")
 	} else {
 		response.Fail(c, gin.H{}, "查询失败")
 	}
