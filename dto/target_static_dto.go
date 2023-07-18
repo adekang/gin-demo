@@ -11,7 +11,7 @@ type TargetStaticDto struct {
 	Connector  string `json:"connector"`
 	Used       string `json:"used"`
 	Value      string `json:"value"`
-	Expression model.Expression
+	TargetName string `json:"targetName"`
 }
 
 func ToTargetStaticDto(targetStatic []model.TargetStatic) []TargetStaticDto {
@@ -24,20 +24,22 @@ func ToTargetStaticDto(targetStatic []model.TargetStatic) []TargetStaticDto {
 		if len(conn) > 1 {
 			for i, _ := range conn {
 				targetStaticDto = append(targetStaticDto, TargetStaticDto{
-					ID:        int(v.ID),
-					ExpId:     v.ExpId,
-					Connector: conn[i],
-					Used:      v.Used,
-					Value:     val[i],
+					ID:         int(v.ID),
+					ExpId:      v.ExpId,
+					Connector:  conn[i],
+					Used:       v.Used,
+					Value:      val[i],
+					TargetName: v.Expression.Name,
 				})
 			}
 		} else {
 			targetStaticDto = append(targetStaticDto, TargetStaticDto{
-				ID:        int(v.ID),
-				ExpId:     v.ExpId,
-				Connector: v.Connector,
-				Used:      v.Used,
-				Value:     v.Value,
+				ID:         int(v.ID),
+				ExpId:      v.ExpId,
+				Connector:  v.Connector,
+				Used:       v.Used,
+				Value:      v.Value,
+				TargetName: v.Expression.Name,
 			})
 		}
 

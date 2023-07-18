@@ -2,13 +2,14 @@ package model
 
 import "gorm.io/gorm"
 
+// 添购
 type TargetStatic struct {
 	gorm.Model
 	Connector  string     `gorm:"type:varchar(20)"`
 	Used       string     `gorm:"type:varchar(20)"`
 	Value      string     `gorm:"type:varchar(20)"`
-	Expression Expression `gorm:"embedded"` // 嵌套字段
-	ExpId      int        `gorm:"foreign_Key:ExpressionExpId"`
+	ExpId      int        `gorm:"column:exp_id;foreignKey:ExpId"`
+	Expression Expression `gorm:"foreignKey:ExpId;references:exp_id"`
 }
 
 func (v TargetStatic) TableName() string {
