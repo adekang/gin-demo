@@ -6,11 +6,12 @@ import (
 )
 
 type TargetStaticDto struct {
-	ID        int    `json:"id"`
-	ExpId     int    `json:"exp_id"`
-	Connector string `json:"connector"`
-	Used      string `json:"used"`
-	Value     string `json:"value"`
+	ID         int    `json:"id"`
+	ExpId      int    `json:"exp_id"`
+	Connector  string `json:"connector"`
+	Used       string `json:"used"`
+	Value      string `json:"value"`
+	Expression model.Expression
 }
 
 func ToTargetStaticDto(targetStatic []model.TargetStatic) []TargetStaticDto {

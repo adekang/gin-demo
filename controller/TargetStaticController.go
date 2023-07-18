@@ -1,27 +1,39 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"github/adekang/gin-demo/common"
-	"github/adekang/gin-demo/dto"
 	"github/adekang/gin-demo/model"
 	"github/adekang/gin-demo/response"
 )
 
 func FindAllTargetStatic(c *gin.Context) {
 	db := common.GetDB()
-	err := db.AutoMigrate(&model.TargetStatic{})
+	err := db.AutoMigrate(&model.Expression{}, &model.TargetStatic{})
 	if err != nil {
 		return
 	}
-	var targetStatic []model.TargetStatic
-	result := db.Find(&targetStatic)
+
+	var (
+		targetStatic []model.TargetStatic
+	)
+
+	result := db.Preload("Expression").Find(&targetStatic)
+
+	fmt.Println("--------------------------")
+	fmt.Println(targetStatic)
+	fmt.Println("--------------------------")
 
 	if result.Error == nil {
-		response.Success(c, dto.ToTargetStaticDto(targetStatic), "查询成功")
+		//response.Success(c, dto.ToTargetStaticDto(targetStatic), "查询成功")
+		response.Success(c, gin.H{
+			"result": targetStatic,
+		}, "查询成功")
 	} else {
 		response.Fail(c, gin.H{}, "查询失败")
+		return
 	}
 }
 

@@ -18,9 +18,13 @@ func InitDB() *gorm.DB {
 	password := viper.GetString("datasource.password")
 	charset := viper.GetString("datasource.charset")
 	args := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=True&loc=Local", username, password, host, port, database, charset)
-	fmt.Println("args::", args)
 
-	db, err := gorm.Open(mysql.Open(args), &gorm.Config{})
+	db, err := gorm.Open(mysql.New(mysql.Config{
+		DSN:               args,
+		DefaultStringSize: 171,
+	}), &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true, // 禁用外键约束 ,逻辑外键
+	})
 	if err != nil {
 		panic("failed to connect database,err:" + err.Error())
 	}
