@@ -84,10 +84,13 @@ func Login(c *gin.Context) {
 
 func Register(c *gin.Context) {
 	DB := common.GetDB()
-
+	err := DB.AutoMigrate(&model.User{})
+	if err != nil {
+		return
+	}
 	// 获取参数
 	var requestUser = model.User{}
-	err := c.Bind(&requestUser)
+	err = c.Bind(&requestUser)
 	if err != nil {
 		return
 	}
