@@ -2,7 +2,6 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/copier"
 	"github/adekang/gin-demo/common"
 	"github/adekang/gin-demo/dto"
 	"github/adekang/gin-demo/model"
@@ -30,23 +29,35 @@ func FindAllTargetStatic(c *gin.Context) {
 func UpdateTarget(c *gin.Context) {
 	db := common.GetDB()
 
-	var requestTargetStatic = model.TargetStatic{}
+	var requestTargetStatic []model.TargetStatic
 	err := c.Bind(&requestTargetStatic)
 	if err != nil {
 		response.Fail(c, nil, "请求错误")
 		return
 	}
 	updateVar := &model.TargetStatic{}
-	err = copier.Copy(updateVar, requestTargetStatic)
+	// 发来2条数据
+	if len(requestTargetStatic) > 1 {
+		updateVar.ID = requestTargetStatic[0].ID
+		updateVar.ExpId = requestTargetStatic[0].ExpId
+		updateVar.Used = requestTargetStatic[0].Used
 
-	if err != nil {
-		// 处理错误
+		for i, item := range requestTargetStatic {
+			exp := ""
+			if i != len(requestTargetStatic)-1 {
+				exp = ","
+			}
+			updateVar.Connector += item.Connector + exp
+			updateVar.Value += item.Value + exp
+		}
+	} else {
+		updateVar = &requestTargetStatic[0]
 	}
+
 	if err := db.Model(&requestTargetStatic).Updates(&updateVar).Error; err != nil {
 		// 处理保存失败错误
 		response.Fail(c, nil, "更新失败")
 		return
 	}
-
 	response.Success(c, nil, "更新成功")
 }

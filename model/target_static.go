@@ -2,7 +2,6 @@ package model
 
 import "gorm.io/gorm"
 
-// 添购
 type TargetStatic struct {
 	gorm.Model
 	Connector  string     `gorm:"type:varchar(20)"`

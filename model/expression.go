@@ -1,6 +1,6 @@
 package model
 
-// Expression 公式 女神
+// Expression 公式
 type Expression struct {
 	ExpId      int    `gorm:"primaryKey;AUTO_INCREMENT;column:exp_id"`
 	Name       string `gorm:"type:varchar(255)"`
