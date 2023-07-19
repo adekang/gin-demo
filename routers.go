@@ -27,5 +27,20 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 		targetStatic.POST("/update", controller.UpdateTarget)
 	}
 
+	//指标管理
+	formSystem := r.Group("/FormSystem")
+	{
+		formSystem.GET("/findAll", controller.FindAllFormSystem)
+		formSystem.POST("/update", controller.UpdateTarget)
+	}
+	//指标管理
+	materialAttr := r.Group("/MaterialAttr")
+	{
+		materialAttr.GET("/findAll", controller.FindAllMaterialAttr)
+		materialAttr.POST("/update", controller.UpdateMaterialAttr)
+		materialAttr.POST("/delete", controller.DeleteMaterialAttr)
+		materialAttr.GET("/screenMat", controller.ScreenMaterialAttr)
+	}
+
 	return r
 }
