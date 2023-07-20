@@ -74,18 +74,16 @@ type Request struct {
 	Eg float32 `json:"eg"`
 }
 
+// ScreenMaterialAttr 判断eg  获取 粘结剂和单质炸药
 func ScreenMaterialAttr(c *gin.Context) {
-	// 获取请求体的 eg
-	var requestJson Request
-	err := c.ShouldBindJSON(&requestJson)
+	// Query 获取参数
+	requestQuery := c.Query("eg")
+	f, err := strconv.ParseFloat(requestQuery, 32)
 	if err != nil {
-		response.Fail(c, gin.H{}, "eg为空")
+		fmt.Println("无法将字符串转换为float32:", err)
 		return
 	}
-
-	eg := requestJson.Eg
-	fmt.Println(eg)
-
+	eg := float32(f)
 	//	expression表中的 name和use筛选出整条数据
 	var expression model.Expression
 	db := common.GetDB()
@@ -95,13 +93,10 @@ func ScreenMaterialAttr(c *gin.Context) {
 	expId := expression.ExpId
 	//	根据 exp_id 在 targetStatic 表中 获取 connector 和 value
 	var targetStatic model.TargetStatic
-	db.Where("exp_id = ?", expId).Find(&targetStatic)
-	fmt.Println(targetStatic)
+	db.Unscoped().Where("exp_id = ?", expId).Find(&targetStatic)
 
 	connector := targetStatic.Connector
 	value := targetStatic.Value
-	fmt.Println(connector)
-	fmt.Println(value)
 	// judge 判断 eg的正确性
 	if judges(connector, value, eg) {
 		//	正确返回 粘结剂和单质炸药

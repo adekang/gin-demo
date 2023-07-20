@@ -12,6 +12,8 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 	r.POST("/api/auth/register", controller.Register)
 	r.POST("/api/auth/login", controller.Login)
 	r.POST("/api/auth/info", middleware.AuthMiddleware(), controller.Info)
+	r.POST("/api/img", controller.ImgPost)
+	r.GET("/RawMaterial/screenMat", controller.ScreenMaterialAttr)
 
 	// AlphaBeta 管理
 	alphaBeta := r.Group("/AlphaBeta")
@@ -39,7 +41,18 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 		materialAttr.GET("/findAll", controller.FindAllMaterialAttr)
 		materialAttr.POST("/update", controller.UpdateMaterialAttr)
 		materialAttr.POST("/delete", controller.DeleteMaterialAttr)
-		materialAttr.GET("/screenMat", controller.ScreenMaterialAttr)
+	}
+
+	//指标管理
+	expression := r.Group("/Expression")
+	{
+		expression.GET("/findAllByUse", controller.FindAllByUse)
+	}
+
+	// 指标
+	target := r.Group("/Target")
+	{
+		target.GET("/findStaticTarget", controller.FindStaticByType)
 	}
 
 	return r
