@@ -122,11 +122,30 @@ func ScreenMaterialAttr(c *gin.Context) {
 
 	} else {
 		//	不正确返回字符串
-		response.Fail(c, gin.H{}, "eg不能大于1.6")
+		alphaBeta := model.AlphaBeta{}
+		// GORM自动生成的SQL语句包含了deleted_at条件,导致未知列错误。
+		// 而数据表中实际上并没有 deleted_at
+		// 通过Unscoped()方法可以解决这个问题 或者在类型中直接去掉gorm.Model
+		db.Unscoped().Where("apply = ?", "圆筒比动能").First(&alphaBeta)
+
+		alpha := alphaBeta.Alpha
+		beta := alphaBeta.Beta
+		text := "现材料不满足设计要求,需研发Eg>" +
+			formatFloat(eg/(0.92*alpha)) +
+			"且H50>" +
+			formatFloat(0.32*beta) +
+			"cm的新型单质炸药"
+		response.Fail(c, gin.H{}, text)
 	}
 
 }
 
+// 格式化float32 为 string
+func formatFloat(f float32) string {
+	return fmt.Sprintf("%.2f", f)
+}
+
+// 判断 eg 是否满足条件
 func judges(connectors string, values string, eg float32) bool {
 
 	cons := strings.Split(connectors, ",")
@@ -137,10 +156,10 @@ func judges(connectors string, values string, eg float32) bool {
 			return false
 		}
 	}
-
 	return true
 }
 
+// 真正判断 eg 是否满足条件
 func judge(connector string, value string, eg float32) bool {
 	valueNum, err := strconv.ParseFloat(value, 32)
 	if err != nil {
