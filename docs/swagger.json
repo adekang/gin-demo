@@ -1,0 +1,46 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample example",
+        "title": "Test Swagger Gin Demo API",
+        "contact": {
+            "name": "adekang",
+            "url": "https://github.com/adekang",
+            "email": "adekang@163.com"
+        },
+        "version": "1.0"
+    },
+    "host": "127.0.0.1:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/AlphaBeta/findAll": {
+            "get": {
+                "description": "接口描述：查询所有的AlphaBeta",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "测试"
+                ],
+                "summary": "接口简介：查询所有的AlphaBeta",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "400": {
+                        "description": "fail",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

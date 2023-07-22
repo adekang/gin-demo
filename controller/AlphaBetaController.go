@@ -8,6 +8,15 @@ import (
 	"github/adekang/gin-demo/response"
 )
 
+// FindAllAlphaBeta
+// @Summary 接口简介：查询所有的AlphaBeta
+// @Description 接口描述：查询所有的AlphaBeta
+// @Tags 测试
+// @Accept json
+// @Produce json
+// @Success 200 {object} interface{} "ok"
+// @Failure 400 {object} interface{} "fail"
+// @Router /AlphaBeta/findAll [get]
 func FindAllAlphaBeta(c *gin.Context) {
 	//连接数据库
 	db := common.GetDB()

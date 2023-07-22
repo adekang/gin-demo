@@ -1,0 +1,31 @@
+basePath: /api/v1
+host: 127.0.0.1:8080
+info:
+  contact:
+    email: adekang@163.com
+    name: adekang
+    url: https://github.com/adekang
+  description: This is a sample example
+  title: Test Swagger Gin Demo API
+  version: "1.0"
+paths:
+  /AlphaBeta/findAll:
+    get:
+      consumes:
+      - application/json
+      description: 接口描述：查询所有的AlphaBeta
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: object
+        "400":
+          description: fail
+          schema:
+            type: object
+      summary: 接口简介：查询所有的AlphaBeta
+      tags:
+      - 测试
+swagger: "2.0"
